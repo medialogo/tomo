@@ -10,7 +10,8 @@ body {
 }
 .tomo-shell-head, .tomo-shell-head-logo, .tomo-shell-head-account,
 .tomo-shell-main-search, .tomo-shell-main, .tomo-shell-main-nav,
-.tomo-shell-main-content, .tomo-shell-foot, .tomo-shell-modal {
+.tomo-shell-main-command,.tomo-shell-main-content, .tomo-shell-main-content-list,
+.tomo-shell-foot, .tomo-shell-modal {
   position : absolute;
 }
 .tomo-shell-head {
@@ -65,32 +66,58 @@ body {
   top   :30px;
   left  :0;
   right :0;
-  bottom:40px;
+  bottom:30px;
 }
 .tomo-shell-main-nav {
   top		: 0;
   left  : 0;
   right : 0;
-  height : 49px;
+  height : 59px;
   background: #fff;
-  z-index	: 1;
+/*  z-index	: 1;*/
 }
-.tomo-shell-main-search {
-  top   		: 3px;
-  right 		: 0;
-  width 		: 150px;
+.tomo-shell-main-command {
+  top   		: 12px;
+  left 		: 12px;
+  width 		: 65%;
   height		: 32px;
-  line-height 	: 32px;
-  background 	: blue; 
+  font-size : 20px;
+  /*padding : 2px;*/
+  background 	: #ccc; 
+  overflow : hidden;
 }
 
-.tomo-shell-main-content {
-  top		: 50px;
-  left  : 1px;
-  right : 1px;
-  bottom  : 0;
-  background :#ddd;
+.tomo-shell-main-command button {
+  width: 50px;
 }
+
+.tomo-shell-main-search {
+  top   		: 12px;
+  right 		: 12px;
+  width 		: 25%;
+  height		: 32px;
+  font-size : 20px;
+  padding : 2px;
+  background 	: #ccc; 
+}
+.tomo-shell-main-search span{
+  vertical-align : middle;
+}
+.tomo-shell-main-content {
+  top		: 60px;
+  left  : 0;
+  right : 0;
+  bottom  : 0;
+  background :#ccc;
+}
+.tomo-shell-main-content-list {
+  top		: 0;
+  left  : 60px;
+  right : 60px;
+  bottom  : 0;
+  background :#fff;
+}
+
 .tomo-x-closed .tomo-shell-main-nav {
   width   :0;
 }
@@ -101,7 +128,7 @@ body {
   bottom : 0;
   left  : 0;
   right : 0;
-  height: 40px;
+  height: 30px;
   background : rgb(4, 84, 121);
 }
 
