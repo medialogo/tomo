@@ -10,7 +10,7 @@
   white  : true
 */
 
-/*global $, tomo:true */
+/*global $, tomo */
 
 tomo.shell =(function () {
   //-------- モジュールスコープ変数開始 ------------
