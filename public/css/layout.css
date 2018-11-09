@@ -1,0 +1,103 @@
+/* @CHARSET "UTF-8";*/
+/*
+ * lyaout.css
+ *
+*/
+.tomo-shell-head, .tomo-shell-head-logo, .tomo-shell-head-account,
+.tomo-shell-head-search, .tomo-shell-main, .tomo-shell-main-nav,
+.tomo-shell-main-content, .tomo-shell-foot, .tomo-shell-modal {
+  position : absolute;
+}
+.tomo-shell-head {
+  top   : 0;
+  left  : 0;
+  right : 0;
+  height: 40px;
+}
+.tomo-shell-head-logo {
+  top   : 4px;
+  left  : 8px;
+  height: 32px;
+  width : 128px;
+  background : orange;
+}
+/*
+  .tomo-shell-head-logo h1 {
+    font : 800 22px/22px Arial, Helvetica, sans-serif;
+    margin : 0;
+  }
+  .tomo-shell-head-logo p {
+    font : 800 10px/10px Arial, Helvetica, sans-serif;
+    margin : 0;
+  }
+  */
+.tomo-shell-head-account {
+  top   		: 4px;
+  right 		: 0;
+  width 		: 64px;
+  height		: 32px;
+  line-height 	: 32px;
+  background 	: green; 
+  /*
+  color 		: #fff;
+  text-align 	: center;
+  cursor		: pointer;
+  overflow		: hidden;
+  text-overflow	: ellipsis;
+*/
+}
+.tomo-shell-head-search {
+  top   		: 4px;
+  right 		: 0;
+  width 		: 248px;
+  height		: 32px;
+  line-height 	: 32px;
+  background 	: blue; 
+}
+.tomo-shell-main {
+  top   :40px;
+  left  :0;
+  right :0;
+  bottom:40px;
+}
+.tomo-shell-main-content,
+.tomo-shell-main-nav {
+  top		: 0;
+  bottom   	: 0;
+}
+.tomo-shell-main-nav {
+  width   	: 250px;
+  background: #eee;
+  z-index	: 1;
+}
+.tomo-x-closed .tomo-shell-main-nav {
+  width   :0;
+}
+.tomo-shell-main-content {
+  left  :250px;
+  right :0;
+  background :#ddd;
+}
+  .tomo-x-closed .tomo-shell-main-content {
+   left   :0;
+  }
+.tomo-shell-foot {
+  bottom : 0;
+  left  : 0;
+  right : 0;
+  height: 40px;
+}
+
+.tomo-shell-modal {
+  margin-top   :-200px;
+  margin-left   :-200px;
+  top   :50%;
+  left  :50%;
+  width :400px;
+  height:400px;
+  background:#fff;
+  border-radius:3px;
+  z-index :2;
+
+  display : none;
+}
