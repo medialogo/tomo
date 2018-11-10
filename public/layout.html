@@ -3,7 +3,7 @@
 
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Layout</title>
 
 <link rel="stylesheet" href="css/layout.css" type="text/css" />
@@ -12,27 +12,43 @@
 </head>
 <body>
   <div id="tomo">
-    <div class="tomo-shell-head" >
-      <div class="tomo-shell-head-logo"><span>Todo meMo</span></div> 
-<!-- <div class="tomo-shell-head-account"></div> --> 
-    </div>
+    <header>
+        <div class="tomo-shell-head" >
+            <div class="tomo-shell-head-logo"><span>Todo meMo</span></div> 
+      <!-- <div class="tomo-shell-head-account"></div> --> 
+          </div>
+    </header>
     <div class="tomo-shell-main" >
       <div class="tomo-shell-main-nav">
           <div class="tomo-shell-main-command">
-            <span></span><button>new</button>
-            <button>2</button>
-            <button>3</button>
-            <button>4</button>
-            <button>5</button></span>
-          </div>      
+            <ul>
+              <li><a href="#">new</a></li>
+              <li><a href="#">todo</a></li>
+              <li><a href="#">memo</a></li>
+              <li><a href="#">del</a></li>
+              <li><a href="#">any</a></li>
+            </ul>
+          </div>
           <div class="tomo-shell-main-search"><span>search</span></div>      
       </div> 
       <div class="tomo-shell-main-content">
-          <div class="tomo-shell-main-content-list">list</div> 
+          <div class="tomo-shell-main-content-list"><img src="file:///C:\Users\takashi\Desktop\astro\20180117\DSC_0418_s.png" alt="astro">
+            <div>list</div>
+            <h1>見出し１</h1><p>あいうえお</p>
+            <h2>見出し2</h2><p>あいうえお</p>
+            <h3>見出し3</h3><p>あいうえお</p>
+            <h4>見出し4</h4><p>あいうえお</p>
+            <h5>見出し5</h5><p>あいうえお</p>
+            <h6>見出し6</h6><p>あいうえお</p>
+          </div> 
+          <!-- <div class="tomo-shell-main-content-list">list</div>  -->
       </div> 
+      main
     </div>
-    <div class="tomo-shell-foot">foot</div> 
-    <div class="tomo-shell-modal">modal</div> 
+    <footer class="tomo-shell-foot">
+      <div id="cr"><span>&copy;2018 mediaLogo</span></div>
+    </footer> 
+    <!-- <div class="tomo-shell-modal">modal</div>  -->
   </div>
 </body>
 </html>
