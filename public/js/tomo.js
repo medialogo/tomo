@@ -10,17 +10,14 @@
   white  : true
 */
 
-/*global $, tomo:true */
+/*global $, tomo */
 
 var tomo = (function() {
   'use strict';
   var initModule = function( $container ) {
     $container.html(
-      '<h1 style="display:inline-block; margin:25px;">'
-      + 'こんにちワールド'
-      + '</h1>'
-    );
+      tomo.shell.initModule( $container ));
   };
-  
-  return { initModule: initModule };
+
+return { initModule: initModule };
 } ());

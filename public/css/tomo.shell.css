@@ -1,83 +1,165 @@
 /* @CHARSET "UTF-8";*/
 /*
- * spa.shell.css
- * SPA シェルモジュールスタイル
+ * lyaout.css
  *
 */
-.spa-shell-head, .spa-shell-head-logo, .spa-shell-head-acct,
-.spa-shell-head-search, .spa-shell-main, .spa-shell-main-nav,
-.spa-shell-main-content, .spa-shell-foot, .spa-shell-modal {
+
+/* @group reset */
+* { margin: 0;padding: 0;}
+a { text-decoration: none;}
+ul, ol { list-style : none;}
+img { vertical-align: middle;
+      max-width: 100%;
+    }
+html {
+  /* font : 800 22px/22px Arial, Helvetica, sans-serif; */
+  /* font : 10pt 'Trebuchet M5', Verdana, Helvetica, Arial, sans-serif; */
+  font-family: Verdana, sans-serif;
+  line-height : 1.5;
+  font-size: 16px;
+}
+h1,h2, p { margin-bottom: 4px;}
+h3,h4,h5,h6 { margin-bottom: 4px;}
+h1 { font-size : 48px;}
+h2 { font-size : 36px;}
+h3 { font-size : 24px;}
+h4, h5, h6 { font-size : 16px;}
+h1 {line-height : 1}
+h2 {line-height : 1}
+h3 {line-height : 1.5}
+h4, h5, h6 {line-height : 1.5} 
+/* @end */
+
+body {
+  color : #444;
+  background-color : #888;
+}
+.tomo-shell-head, .tomo-shell-head-logo, .tomo-shell-head-account,
+.tomo-shell-main-search, .tomo-shell-main, .tomo-shell-main-nav,
+.tomo-shell-main-command,.tomo-shell-main-content, .tomo-shell-main-content-list,
+.tomo-shell-foot, .tomo-shell-modal {
   position : absolute;
 }
-.spa-shell-head {
+.tomo-shell-head {
   top   : 0;
   left  : 0;
   right : 0;
-  height: 40px;
+  height: 30px;
+  z-index: 0;
 }
-.spa-shell-head-logo {
-  top   : 4px;
-  left  : 8px;
-  height: 32px;
-  width : 128px;
+.tomo-shell-head-logo {
+  top   : 0;
+  left  : 0;
+  height: 30px;
+  right : 0;
+  background : rgb(4, 84, 121);
+  z-index : 1;
+  color : #fff;
+/*  font-size : 12pt;*/
+  text-align : center;
+  vertical-align: center;
 }
-  .spa-shell-head-logo h1 {
-    font : 800 22px/22px Arial, Helvetica, sans-serif;
-    margin : 0;
-  }
-  .spa-shell-head-logo p {
-    font : 800 10px/10px Arial, Helvetica, sans-serif;
-    margin : 0;
-  }
-.spa-shell-head-acct {
-  top   		: 4px;
-  right 		: 0;
-  width 		: 210px;
-  height		: 32px;
-  line-height 	: 32px;
-  background 	: #888;
-  color 		: #fff;
-  text-align 	: center;
-  cursor		: pointer;
-  overflow		: hidden;
-  text-overflow	: ellipsis;
+.tomo-shell-head-logo span {
+  vertical-align: middle;
 }
 
-.spa-shell-main {
-  top   :40px;
+.tomo-shell-main {
+  top   :30px;
   left  :0;
   right :0;
-  bottom:40px;
+  bottom:30px;
 }
-.spa-shell-main-content,
-.spa-shell-main-nav {
+.tomo-shell-main-nav {
   top		: 0;
-  bottom   	: 0;
+  left  : 0;
+  right : 0;
+  height : 59px;
+  background: #fff;
+/*  z-index	: 1;*/
 }
-.spa-shell-main-nav {
-  width   	: 400px;
-  background: #eee;
-  z-index	: 1;
+.tomo-shell-main-command {
+  top   		: 12px;
+  left 		  : 10px;
+  width 		: 60%;
+  height		: 32px;
+  background-color 	: #704934; 
+  background : -moz-linear-gradient(top, rgb(195, 221, 217) 0%, rgb(28, 132, 180) 88%); /*  Old Fx( 3.6 to 15) */
+  background : -webkit-linear-gradient(top, rgb(195, 221, 217) 0%, rgb(28, 132, 180) 88%); /*Chrome 10+ Sarafi5.1+*/
+  background : linear-gradient(to bottom,  rgb(195, 221, 217) 0%, rgb(28, 132, 180) 88%); /* W3C */
+  overflow : hidden;
+  margin-bottom : 24px;
+
 }
-.spa-x-closed .spa-shell-main-nav {
+
+.tomo-shell-main-command ul li {
+  width: 20%;
+  float: left;
+}
+
+.tomo-shell-main-command ul li a{
+  display: block;
+  padding : 4px 4px;
+  color : #e6e1d4;
+  font-size : 14px;
+  text-align : center;
+}
+.tomo-shell-main-command ul li a:hover {
+  color :white;
+  background-color:#7d4934;
+}
+
+.tomo-shell-main-search {
+  top   		: 12px;
+  right 		: 10px;
+  width 		: 30%;
+  height		: 32px;
+  padding : 0px;
+  background 	: #ccc; 
+}
+.tomo-shell-main-command span, .tomo-shell-main-search span{
+  vertical-align : middle;
+}
+.tomo-shell-main-content {
+  top		: 60px;
+  left  : 0;
+  right : 0;
+  bottom  : 0;
+  background :#ccc;
+  overflow : scroll;
+}
+.tomo-shell-main-content-list {
+  top		: 0;
+  left  : 35px;
+  right : 35px;
+  bottom  : 0;
+  padding : 5px; 
+  background :#fff;
+  overflow : scroll;
+}
+
+.tomo-x-closed .tomo-shell-main-nav {
   width   :0;
 }
-.spa-shell-main-content {
-  left  :250px;
-  right :0;
-  background :#ddd;
-}
-  .spa-x-closed .spa-shell-main-content {
+.tomo-x-closed .tomo-shell-main-content {
    left   :0;
   }
-.spa-shell-foot {
+footer {
+  position : fixed;
   bottom : 0;
   left  : 0;
   right : 0;
-  height: 40px;
+  height: 30px;
+  background : rgb(4, 84, 121);
+  text-align: center;
 }
 
-.spa-shell-modal {
+footer #cr {
+  color : white;
+  font-size : 12px;
+  padding :4px;
+}
+
+.tomo-shell-modal {
   margin-top   :-200px;
   margin-left   :-200px;
   top   :50%;
