@@ -1,5 +1,5 @@
 /*
- * spa.util.js
+ * tomo.util.js
  * 汎用JavaScriptユーティリティ
  *
  * Michael S. Mikowski - mike.mikowski@gmail.com
@@ -15,8 +15,8 @@
   white  : true
 */
 
-/*global $, spa */
-spa.util = (function () {
+/*global $, tomo */
+tomo.util = (function () {
   var makeError, setConfigMap;
 
   // パブリックコンストラクタ /makeError/ ↓

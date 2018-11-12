@@ -5,15 +5,16 @@
 */
 
 /* @group reset */
+
+/*
 * { margin: 0;padding: 0;}
 a { text-decoration: none;}
 ul, ol { list-style : none;}
 img { vertical-align: middle;
       max-width: 100%;
-    }
+    }*/
+/*
 html {
-  /* font : 800 22px/22px Arial, Helvetica, sans-serif; */
-  /* font : 10pt 'Trebuchet M5', Verdana, Helvetica, Arial, sans-serif; */
   font-family: Verdana, sans-serif;
   line-height : 1.5;
   font-size: 16px;
@@ -29,14 +30,16 @@ h2 {line-height : 1}
 h3 {line-height : 1.5}
 h4, h5, h6 {line-height : 1.5} 
 /* @end */
-
+/*
 body {
   color : #444;
   background-color : #888;
 }
+*/
+
 .tomo-shell-head, .tomo-shell-head-logo, .tomo-shell-head-account,
 .tomo-shell-main-search, .tomo-shell-main, .tomo-shell-main-nav,
-.tomo-shell-main-command,.tomo-shell-main-content, .tomo-shell-main-content-list,
+.tomo-shell-main-command,.tomo-shell-main-content, .tomo-shell-main-list,
 .tomo-shell-foot, .tomo-shell-modal {
   position : absolute;
 }
@@ -127,12 +130,12 @@ body {
   background :#ccc;
   overflow : scroll;
 }
-.tomo-shell-main-content-list {
+.tomo-shell-main-list {
   top		: 0;
   left  : 35px;
   right : 35px;
   bottom  : 0;
-  padding : 5px; 
+  padding : 0px; 
   background :#fff;
   overflow : scroll;
 }

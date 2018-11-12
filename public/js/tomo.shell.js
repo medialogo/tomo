@@ -35,14 +35,8 @@ tomo.shell =(function () {
             + '<div class="tomo-shell-main-search"><span>search</span></div>'
           + '</div>'
           + '<div class="tomo-shell-main-content">'
-            + '<div class="tomo-shell-main-content-list"><img src="file:///C:\\Users/takashi/Desktop/astro/20180117/DSC_0418_s.png" alt="astro">'
-              + '<div>list</div>'
-              + '<h1>見出し１</h1><p>あいうえお</p>'
-              + '<h2>見出し2</h2><p>あいうえお</p>'
-              + '<h3>見出し3</h3><p>あいうえお</p>'
-              + '<h4>見出し4</h4><p>あいうえお</p>'
-              + '<h5>見出し5</h5><p>あいうえお</p>'
-              + '<h6>見出し6</h6><p>あいうえお</p>'
+            + '<div class="tomo-shell-main-list">'
+               + '<div id="tomo-list-frame"></div>'
             + '</div>'
           + '</div>'
         + '</div>'
@@ -105,6 +99,8 @@ initModule;
     stateMap.$container = $container;
     $container.html( configMap.main_html );
     setJqueryMap();
+
+    tomo.list.initModule( jqueryMap.$container);
   };
   //パブリックメソッド/initModule/終了 ------------
   return { initModule : initModule};

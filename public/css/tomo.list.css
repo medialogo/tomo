@@ -1,0 +1,41 @@
+@CHARSET "UTF-8";
+/*
+ * tomo.list.css
+ * リスト機能スタイル
+*/
+
+
+.tomo-list {
+    top   : 0;
+    left  : 0;
+    right : 0;
+    bottom : 0;
+    z-index: 0;
+    background-color :lightblue;
+    /* font-size : 10px; */
+  }
+
+.tomo-list-head {
+    top   : 0;
+    left  : 0;
+    right : 0;
+    height: 30px;
+    padding : 0 5px;
+    z-index: 1;
+    background-color :orange;
+  }
+
+.tomo-list-head.button {
+    /* font-size : 10px; */
+}
+
+.tomo-list-item {
+    font-size : 16px;
+    line-height : 30px;
+    border-bottom:solid 1px rgb(30, 48, 30);  
+}
+
+.tomo-list-item:hover {
+    /* font-color : rgb(208, 226, 43); */
+    background-color: rgb(105, 119, 105);  
+}
