@@ -22,6 +22,7 @@ tomo.list = (function () {
           + '<div class="tomo-list-head">'
             + '<div class="tomo-list-head-title">'
               + '<button id="new-item">新規</button>'
+              + '<button id="del-item">削除</button>'
             + '</div>'
           + '</div>'
           + '<div class="tomo-list-box">'
@@ -34,8 +35,10 @@ tomo.list = (function () {
     stateMap = { $append_target : null},
     jqueryMap = {},
 
+    last_selected_item = -1,
+
     setJqueryMap,
-    onClickNew, onClickItem,
+    onClickNew, onClickItem, onClickDelete,
     configModule, initModule;
 
   //----------------- モジュールスコープ変数↑ ---------------
@@ -53,14 +56,16 @@ tomo.list = (function () {
       $list_box = $append_target.find( '.tomo-list-box'),
       $list_items = $append_target.find( '.tomo-list-items'),
       $list_item = $append_target.find( '.tomo-list-item'),
-      $add_new = $append_target.find( '#new-item')
+      $add_new = $append_target.find( '#new-item'),
+      $delete_item = $append_target.find( '#del-item')
 
     jqueryMap = {
       $list : $list,
       $list_box : $list_box,
       $list_items : $list_items,
-      // $list_item : $list_item,
+      $list_item : $list_item,
       $add_new : $add_new,
+      $delete_item : $delete_item,
       $window		: $(window)
     };
   };
@@ -105,9 +110,21 @@ tomo.list = (function () {
     console.log(item_count);
     item_count++;
     $item_list.append('<li class="tomo-list-item"><a href="#">todo' +  item_count + '</a></li>');
+    $item_list.find(":last-child").bind( 'utap', onClickItem );
+
+ 
   }
   onClickItem = function( event ) {
+    console.log(event.target);
+    var $item = event.target;
+    last_selected_item = $('li.tomo-list-item').index(event.target);
+    console.log("clicked " + last_selected_item);
+  }
+  onClickDelete = function( event ) {
     var $item_list = jqueryMap.$list_items;
+    if (last_selected_item > 0) {
+      $item_list.children().eq(last_selected_item).remove();
+    }
   }
 
   // イベントハンドラ終了
@@ -145,7 +162,8 @@ tomo.list = (function () {
 */
     // ユーザー入力イベントをバインドする
     jqueryMap.$add_new.bind('utap', onClickNew );
-    jqueryMap.$list_items.bind( 'utap', onClickItem );
+    jqueryMap.$delete_item.bind('utap', onClickDelete );
+   // jqueryMap.$list_items.bind( 'utap', onClickItem );
 //    jqueryMap.$send.bind( 		'utap', onSubmitMsg );
 //    jqueryMap.$form.bind( 	'submit', onSubmitMsg );
 
