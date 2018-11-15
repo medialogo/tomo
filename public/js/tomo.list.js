@@ -109,21 +109,22 @@ tomo.list = (function () {
         item_count = $item_list.children().length;
     console.log(item_count);
     item_count++;
-    $item_list.append('<li class="tomo-list-item"><a href="#">todo' +  item_count + '</a></li>');
-    $item_list.find(":last-child").bind( 'utap', onClickItem );
+    $item_list.append('<li class="tomo-list-item">todo ' +  item_count + '</li>');
+    //$item_list.find(":last-child").bind( 'utap', onClickItem );
 
  
   }
-  onClickItem = function( event ) {
+/*   onClickItem = function( event ) {
     console.log(event.target);
     var $item = event.target;
     last_selected_item = $('li.tomo-list-item').index(event.target);
     console.log("clicked " + last_selected_item);
   }
+ */  
   onClickDelete = function( event ) {
-    var $item_list = jqueryMap.$list_items;
-    if (last_selected_item > 0) {
-      $item_list.children().eq(last_selected_item).remove();
+    var $selected_items = jqueryMap.$list_items.find($("li.ui-selected"));
+    if ($selected_items != undefined) {
+      $selected_items.remove();
     }
   }
 
@@ -148,6 +149,7 @@ tomo.list = (function () {
     stateMap.$append_target = $append_target;
     setJqueryMap();
 
+    jqueryMap.$list_items.selectable({filter: 'li'});
     // チャットスライダーをデフォルトのタイトルと状態で初期化する
     // jqueryMap.$toggle.prop( 'title', configMap.slider_closed_title );
     // stateMap.position_type = 'closed';

@@ -37,8 +37,12 @@ button#del-item{
     line-height : 30px;
     border-bottom:solid 1px rgb(30, 48, 30);  
 }
-
-.tomo-list-item:active, .tomo-list-item:hover {
+.tomo-list-item:hover, .tomo-list-item.ui-selecting {
     /* font-color : rgb(208, 226, 43); */
     background-color: rgb(105, 119, 105);  
 }
+.tomo-list-item:active, .tomo-list-item.ui-selected {
+    color: white;  
+    background-color: rgb(126, 163, 25);  
+}
+
