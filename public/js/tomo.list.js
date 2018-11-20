@@ -116,70 +116,30 @@ onClickNew = function( event ) {
 
       item_count++;
 
-      var $item =$('<li class="tomo-list-item">todo ' +  item_count + '</li>')
-      .draggable({
-        distance:15, 
-        opacity: 0.6, 
-        //revert: true, 
-        //revertDuration:350, 
-        zIndex:1000,
-        helper: "clone",
-        
-        start : function(event,ui) {
-          pos_start = ui.offset.top;
-          draggedItem = event.target;
-        },
+      var $item =$('<li class="tomo-list-item"><span class="ui-icon ui-icon-triangle-2-n-s"></span>todo ' +  item_count + '</li>');
 
-        drag : function(event,ui){
-          pos = ui.offset.top;
-          place = parseInt((pos - pos_start) / item_height);
-          if (place != place_prev ){
-            // console.log("pos=" + (pos - pos_start), " (" + place +")");
-            place_prev = place;
-          }
-        },
 
-        stop : function() {
+//  $item.bind( 'utap', onClickItem );
+  $item.on("mousedown", function( event ) {
+    var $list = jqueryMap.$list_items;
+
+    if (event.clientX < 50 ) {
+      $list.selectable('disable');
+      $list.children().removeClass('ui-selected');
+      $list.sortable('enable');
+      $list.sortable({
+        tolerance : "pointer",
+        stop: function(event, ui) {
+          ui.item.addClass('ui-selected');
         }
+      });
 
-      }).droppable({
-      accept:'li.tomo-list-item', 
-      // hoverClass:'hover',
-      tolerance :'touch',  
+    } else {
+      $list.sortable('disable');
+      $list.selectable('enable');
 
-      over : function( event, ui) {
-        // startedTime = Date.now();
-        $(this).addClass( "ui-state-highlight" );
-      },
-
-      out : function( event, ui) {
-        $(this).removeClass( "ui-state-highlight" );
-      },
-      
-      drop: function( event, ui ) {
-        //collapsedTime = Date.now() - startedTime;
-        var $childItems = $item_list.children(':not([style])'); 
-        var idx = $childItems.index($(event.target));
-        console.log("dropped on " + idx + " of " + $childItems.length + " items");
-
-        if (place < 0 ) {
-          $item_list[0].insertBefore(draggedItem, event.target);
-
-        }else if (place > 0 ){
-          if (idx === $childItems.length) {
-            $item_list.appendChild(draggedItem);
-          } else {
-            $item_list[0].insertBefore(draggedItem, event.target);
-          }
-        }
-
-      },
-      deactivate: function( event, ui){
-        $('.ui-state-highlight').removeClass( "ui-state-highlight" );
-      }
-
-
-  }).selectable();
+    }
+  });
 
   $item_list.append($item);
   var item_height = $item.height();
@@ -191,6 +151,10 @@ onClickDelete = function( event ) {
   if ($selected_items != undefined) {
     $selected_items.remove();
   }
+}
+
+onClickItem = function ( event ) {
+  console.log ( event.target);
 }
 
 // イベントハンドラ終了
@@ -215,6 +179,8 @@ initModule = function ( $append_target ) {
   stateMap.$append_target = $append_target;
   setJqueryMap();
 
+  jqueryMap.$list_items.sortable().selectable();
+
   for (var i=0; i<10; i++) {
     onClickNew();
   }
@@ -235,7 +201,7 @@ initModule = function ( $append_target ) {
   // ユーザー入力イベントをバインドする
   jqueryMap.$add_new.bind('utap', onClickNew );
   jqueryMap.$delete_item.bind('utap', onClickDelete );
- // jqueryMap.$list_items.bind( 'utap', onClickItem );
+//  jqueryMap.$list_item.bind( 'utap', onClickItem );
 //    jqueryMap.$send.bind( 		'utap', onSubmitMsg );
 //    jqueryMap.$form.bind( 	'submit', onSubmitMsg );
 
