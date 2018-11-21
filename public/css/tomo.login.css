@@ -1,0 +1,55 @@
+/* @CHARSET "UTF-8";*/
+/*
+ * lyaout.css
+ *
+*/
+
+
+#tomo-login, #tomo-login-head, #tomo-login-main {
+  position : absolute;
+}
+
+#tomo-login {
+  top   :30px;
+  left  :0;
+  right :0;
+  bottom:0;
+  background : rgb(124, 188, 218);
+}
+#tomo-login-head {
+  top   : 0;
+  left  : 0;
+  right : 0;
+  height: 30px;
+  font-size : 16px;
+  text-align: center;
+  /* z-index: 0; */
+}
+#tomo-login-message {
+  top   : 0px;
+  left  : 0;
+  right : 0;
+  /* height: 30px; */
+  font-size : 16px;
+  text-align: center;
+  /* z-index: 1;  */
+}
+
+#tomo-login-main {
+  top   : 60px;
+  left  : 0;
+  bottom: 0;
+  right : 0;
+  /* z-index : 1; */
+  /* color : #fff; */
+/*  font-size : 12pt;*/
+   text-align : center;
+  /* vertical-align: center; */
+}
+#tomo-login-form {
+  margin-left : 80px;
+  margin-right : 80px;
+  /* width : 200px; */
+  text-align : left;
+}
+

@@ -1,5 +1,5 @@
 /*
- * spa.data.js
+ * tomo.data.js
  * データモジュール
  *
 */
@@ -11,9 +11,9 @@
   white  : true
 */
 
-/*global $, spa */
+/*global $, tomo */
 
-spa.data = (function () {
+tomo.data = (function () {
     'use strict';
   //---------------- モジュールスコープ変数↓ --------------
   var

@@ -1,5 +1,5 @@
 /*
- * spa.util_b.js
+ * tomo.util_b.js
  * JavaScript ブラウザユーティリティ
  *
 */
@@ -11,9 +11,9 @@
   white  : true
 */
 
-/*global $, spa, getComputedStyle */
+/*global $, tomo, getComputedStyle */
 
-spa.util_b = (function () {
+tomo.util_b = (function () {
   'use strict';
   //---------------- モジュールスコープ変数↓ --------------
   var

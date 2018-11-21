@@ -15,8 +15,8 @@
 var tomo = (function() {
   'use strict';
   var initModule = function( $container ) {
-    $container.html(
-      tomo.shell.initModule( $container ));
+      tomo.model.initModule();
+      tomo.shell.initModule( $container );
   };
 
 return { initModule: initModule };

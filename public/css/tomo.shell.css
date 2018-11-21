@@ -38,7 +38,7 @@ body {
 */
 
 .tomo-shell-head, .tomo-shell-head-logo, .tomo-shell-head-account,
-.tomo-shell-main-search, .tomo-shell-main, .tomo-shell-main-nav,
+.tomo-shell-main-search, #tomo-shell-main, .tomo-shell-main-nav,
 .tomo-shell-main-command,.tomo-shell-main-content, .tomo-shell-main-list,
 .tomo-shell-foot, .tomo-shell-modal {
   position : absolute;
@@ -66,7 +66,7 @@ body {
   vertical-align: middle;
 }
 
-.tomo-shell-main {
+#tomo-shell-main {
   top   :30px;
   left  :0;
   right :0;

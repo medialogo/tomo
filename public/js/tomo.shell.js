@@ -15,14 +15,14 @@
 tomo.shell =(function () {
   //-------- モジュールスコープ変数開始 ------------
   var configMap = {
-      main_html : String()
+      main_html1 : String()
         + '<header>'
           + '<div class="tomo-shell-head" >'
             + '<div class="tomo-shell-head-logo"><span>Todo meMo</span></div>'
           + '</div>'
          + '</header>'
-        + '<div class="tomo-shell-main" >'
-          + '<div class="tomo-shell-main-nav">'
+        + '<div id="tomo-shell-main" >',
+/*           + '<div class="tomo-shell-main-nav">'
             + '<div class="tomo-shell-main-command">'
               + '<ul>'
                 + '<li><a href="#">new</a></li>'
@@ -39,11 +39,33 @@ tomo.shell =(function () {
                + '<div id="tomo-list-frame"></div>'
             + '</div>'
           + '</div>'
+ */
+      main_html2 : String()
         + '</div>'
         + '<footer class="tomo-shell-foot">'
-          + '<div id="cr"><span>&copy;2018 mediaLogo</span></div>'
+        + '<div id="cr"><span>&copy;2018 mediaLogo</span></div>'
         + '</footer> '
-        + '<!-- <div class="tomo-shell-modal">modal</div>  -->'
+        + '<!-- <div class="tomo-shell-modal">modal</div>  -->',
+
+    sub_html : String()
+        + '<div class="tomo-shell-main-nav">'
+          + '<div class="tomo-shell-main-command">'
+            + '<ul>'
+              + '<li><a href="#">new</a></li>'
+              + '<li><a href="#">todo</a></li>'
+              + '<li><a href="#">memo</a></li>'
+              + '<li><a href="#">del</a></li>'
+              + '<li><a href="#">any</a></li>'
+            + '</ul>'
+          + '</div>'
+          + '<div class="tomo-shell-main-search"><span>search</span></div>'
+        + '</div>'
+        + '<div class="tomo-shell-main-content">'
+          + '<div class="tomo-shell-main-list">'
+              + '<div id="tomo-list-frame"></div>'
+          + '</div>'
+        + '</div>',
+
   },
   stateMap = {
     $container  : null,
@@ -94,13 +116,23 @@ initModule;
   // 戻り値 : なし
   // 例外発行 : なし
   //
-  initModule = function ( $container ) {
+  initModule = function ( $container, dest ) {
     // HTMLをロードし、jQueryコレクションをマッピングする
     stateMap.$container = $container;
-    $container.html( configMap.main_html );
-    setJqueryMap();
-
-    tomo.list.initModule( jqueryMap.$container);
+    if ( dest === undefined ) {
+      $container.html( configMap.main_html1 +configMap.main_html2  );
+      setJqueryMap();
+      tomo.login.initModule(jqueryMap.$container);
+    } else if ( dest === 'list' ) {
+      //$(configMap.main_html).find("#tomo-shell-main").append( configMap.sub_html );
+      //console.log (configMap.main_html );
+    //  $container.html( configMap.main_html );
+      $container.html( configMap.main_html1 + configMap.sub_html + configMap.main_html2  );
+      console.log($container.html());
+      setJqueryMap();
+      tomo.list.initModule(jqueryMap.$container);
+    }
+    //tomo.list.initModule( jqueryMap.$container);
   };
   //パブリックメソッド/initModule/終了 ------------
   return { initModule : initModule};

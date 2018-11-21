@@ -174,9 +174,9 @@ onClickItem = function ( event ) {
 // 例外発行     : なし
 //
 initModule = function ( $append_target ) {
+  stateMap.$append_target = $append_target;
   $append_target.find("#tomo-list-frame").append( configMap.main_html );
   //$append_target.html( configMap.main_html );
-  stateMap.$append_target = $append_target;
   setJqueryMap();
 
   jqueryMap.$list_items.sortable().selectable();
