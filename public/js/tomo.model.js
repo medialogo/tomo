@@ -40,34 +40,6 @@ tomo.model = (function () {
 
   // peopleオブジェクトAPI
   // ---------------------
-  // peopleオブジェクトはtomo.model.peopleで利用できる。
-  // peopleオブジェクトはpersonオブジェクトの集合管理するためのメソッドとイベントを提供する。
-  // peopleオブジェクトのパブリックメソッドは以下のとおり。
-  //  * get_user() - 現在のpersonオブジェクトを返す。
-  //  	             現在のユーザがサインインしていない場合には、匿名personオブジェクトを返す。
-  //  * get_db() - あらかじめソートされたすべてのpersonオブジェクト（現在のユーザーを含む）の
-  //	             TaffyDBデータベースを返す。
-  //  * get_by_cid( <client_id> ) - 指定された一意のIDを持つpersonオブジェクトを返す。
-  //  * login(<user_name>) - 指定のユーザ名を持つユーザとしてログインする。
-  //  * logout() - 現在のユーザオブジェクトを匿名に戻す。
-  //
-  // このオブジェクトが発行するjQueryグローバルイベントの以下のとおり。
-  //  * tomo-login - ユーザのログイン処理が完了した時に発行される。
-  //    更新されたユーザオブジェクトをデータとして提供する。
-  //  * tomo-logout - ログアウトの完了時に発行される。
-  //    以前の(匿名)ユーザオブジェクトをデータとして提供する。
-  //
-  // それぞれの人はpersonオブジェクトで表される。
-  //
-  // personオブジェクトは以下のメソッドを提供する。
-  //  * get_is_user() - オブジェクトが現在のユーザの場合にtrueを返す。
-  //  * get_is_anon() - オブジェクトが匿名の場合にtrueを返す。
-  // personオブジェクトの属性は以下の通り。
-  //  * cid - クライアントID文字列。これは常に定義され、クライアントデータがバックエンドと
-  //          同期していない場合のみid属性と異なる。
-  //  * id - 一意のID。オブジェクトがバックエンドと同期していない場合には未定義になることがある。
-  //  * name - ユーザ名の文字列。
-  //  * css_map = アバター表現に使う属性のマップ
 
   personProto = {
       get_is_user : function () { // オブジェクトが現在のユーザの場合にtrueを返す
@@ -148,7 +120,8 @@ tomo.model = (function () {
   //------------------- パブリックメソッド↓ -------------------
   // パブリックメソッド /people/ ↓
   people = (function (){
-    var get_by_cid, get_db, get_user, login, logout;
+    var get_by_cid, get_db, get_user, login, logout,
+        people_list;
 
     get_by_cid = function ( cid ){
         return stateMap.people_cid_map[ cid ];
@@ -159,28 +132,29 @@ tomo.model = (function () {
     get_user = function () { return stateMap.user; };
 
     login = function ( name, passwd  ) {
-      var sio = isFakeData ? tomo.fake.mockSio : tomo.data.getSio(); 
+      var sio = isFakeData ? tomo.fake.mockSio : tomo.data.getSio(),
+          userFound = null; 
 
-      stateMap.user = makePerson({
-          cid : makeCid(),
-          passwd : passwd,
-          name : name
-      });
 
-      if ( stateMap.user.name === 'takashi' &&
-           stateMap.user.passwd === 'lunkekke' ){
+
+      userFound = stateMap.people_db({name:name, passwd:passwd}).first();
+
+      if ( userFound ){
+        stateMap.user = userFound;
+        stateMap.user.passwd = "";
+        console.log(stateMap.user);
             return true;
       } else {
           return false;
       } 
     
 
-      sio.on( 'userupdate', completeLogin );  
+    //   sio.on( 'userupdate', completeLogin );  
 
-      sio.emit( 'adduser', {
-          cid 	 : stateMap.user.cid,
-          name	 : stateMap.user.name
-      });
+    //   sio.emit( 'adduser', {
+    //       cid 	 : stateMap.user.cid,
+    //       name	 : stateMap.user.name
+    //   });
       return true;
     };
 
@@ -213,7 +187,7 @@ tomo.model = (function () {
   // 例外発行 : なし
   //
   initModule = function () {
-    //var i, people_list, person_map;
+    var i, people_list, person_map;
 
     // 匿名ユーザを初期化する
     stateMap.anon_user = makePerson({
@@ -224,6 +198,19 @@ tomo.model = (function () {
     });
     stateMap.user = stateMap.anon_user; // 現在のユーザの初期値は匿名ユーザ
 
+    if ( isFakeData ) {
+        people_list = tomo.fake.getPeopleList();
+        for ( i = 0; i < people_list.length; i++) {
+            person_map = people_list[i];
+            makePerson({
+              cid     : person_map._id,
+              id     : person_map._id,
+              name     : person_map.name,
+              passwd     : person_map.passwd
+            });
+        }
+    }
+    
 
   };
   // パブリックメソッド /initModule/ ↑
@@ -232,7 +219,8 @@ tomo.model = (function () {
   return {
     initModule  : initModule,
 //    chat				: chat,
-    people			: people
+    people			: people,
+    hello   : "hello!"
   };
   //------------------- パブリックメソッド↑ ---------------------
 }());

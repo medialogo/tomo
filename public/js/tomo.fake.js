@@ -15,28 +15,31 @@
 
 tomo.fake = (function () {
   'use strict';
-  var peopleList, fakeIdSerial, makeFakeId, mockSio;
+  var getPeopleList, fakeIdSerial, makeFakeId, mockSio;
 
   fakeIdSerial = 5;
 
   makeFakeId = function () {
       return 'id_' + String( fakeIdSerial++ );
   };
-
-  peopleList = [
-    { name : 'takashi', 
-      _id : 'id_01',
-      passwd : 'lunkekke55',
-    },
-    { name : 'Mike', 
-      _id : 'id_02',
-      passwd : 'skimakaZ',
-    },
-    { name : 'Julia', 
-      _id : 'id_03',
-      passwd : 'skimakkaz',
-    }
-  ];
+  
+  getPeopleList = function () {
+    return[
+        { name : 'takashi', 
+        _id : 'id_01',
+        passwd : 'lunkekke',
+      },
+      { name : 'Mike', 
+        _id : 'id_02',
+        passwd : 'skimakaZ',
+      },
+      { name : 'Julia', 
+        _id : 'id_03',
+        passwd : 'skimakkaz',
+      }
+  
+    ]
+  };
 
   mockSio = (function () {
       var
@@ -140,6 +143,7 @@ tomo.fake = (function () {
   }());
 
   return {
-      mockSio	: mockSio
+      mockSio	: mockSio,
+      getPeopleList : getPeopleList
   };
 }());
