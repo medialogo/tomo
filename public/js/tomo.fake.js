@@ -15,7 +15,8 @@
 
 tomo.fake = (function () {
   'use strict';
-  var getPeopleList, fakeIdSerial, makeFakeId, mockSio;
+  var getUsersList, fakeIdSerial, makeFakeId, mockSio,
+      getTodoList;
 
   fakeIdSerial = 5;
 
@@ -23,7 +24,7 @@ tomo.fake = (function () {
       return 'id_' + String( fakeIdSerial++ );
   };
   
-  getPeopleList = function () {
+  getUsersList = function () {
     return[
         { name : 'takashi', 
         _id : 'id_01',
@@ -38,6 +39,47 @@ tomo.fake = (function () {
         passwd : 'skimakkaz',
       }
   
+    ]
+  };
+
+  getTodoList = function () {
+    return[
+        {
+            _id     : 'todo_01',
+            cid    : 'todo_01',
+            uid    : 'id_01',
+            linum  : 1,
+            order  : 2,
+            title  : "tomo app 開発",
+            memo   : "11月中に完成"
+        },
+        {
+            _id     : 'todo_02',
+            cid    : 'todo_02',
+            uid    : 'id_01',
+            linum  : 2,
+            order  : 3,
+            title  : "自室断捨離",
+            memo   : "誕生日まで"
+        },
+        {
+            _id     : 'todo_03',
+            cid    : 'todo_03',
+            uid    : 'id_01',
+            linum  : 3,
+            order  : 1,
+            title  : "年金手続き",
+            memo   : "来週"
+        },
+        {
+            _id     : 'todo_04',
+            cid    : 'todo_04',
+            uid    : 'id_02',
+            linum  : 4,
+            order  : 4,
+            title  : "ゴルフ場探し",
+            memo   : ""
+        },
     ]
   };
 
@@ -144,6 +186,7 @@ tomo.fake = (function () {
 
   return {
       mockSio	: mockSio,
-      getPeopleList : getPeopleList
+      getUsersList : getUsersList,
+      getTodoList  : getTodoList,
   };
 }());

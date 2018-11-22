@@ -22,28 +22,32 @@ tomo.model = (function () {
   var
     configMap = { anon_id : 'a0'},
     stateMap  = {
-      anon_user	: null,   // 匿名personオブジェクトを格納
+      anon_user	: null,   // 匿名userオブジェクトを格納
       cid_serial: 0,
-      people_cid_map : {},// クライアントIDをキーとしたpersonオブジェクトのマップ
-      people_db		 : TAFFY(), //personオブジェクトのTaffyDBコレクションを格納
-      user			: null,
-      is_connected : false, // ユーザーが現在チャットルームにいるかどうか
+      users_cid_map : {},// クライアントIDをキーとしたuserオブジェクトのマップ
+      users_db		 : TAFFY(), //userオブジェクトのTaffyDBコレクションを格納
+      current_user	: null,
+
+      todoCid_serial: 0,
+      todo_db		 : TAFFY(), //todoオブジェクトのTaffyDBコレクションを格納
+      current_item	: null,
     },
 
     isFakeData = true, // true,
 
-    personProto, makeCid, clearPeopleDb, completeLogin,
-    makePerson, removePerson, people, 
-    //chat, 
+    userProto, makeCid, clearUsersDb, completeLogin,
+    makeUser, removeUser, users, 
+    itemProto, makeTodoCid, makeItem, todo, 
     initModule;
   //----------------- モジュールスコープ変数↑ ---------------
 
-  // peopleオブジェクトAPI
+  // ---------------------
+  // usersオブジェクトAPI
   // ---------------------
 
-  personProto = {
-      get_is_user : function () { // オブジェクトが現在のユーザの場合にtrueを返す
-          return this.cid === stateMap.user.cid;
+  userProto = {
+      get_is_current_user : function () { // オブジェクトが現在のユーザの場合にtrueを返す
+          return this.cid === stateMap.current_user.cid;
       },
       get_is_anon : function () { // オブジェクトが匿名ユーザの場合にtrueを返す
           return this.cid === stateMap.anon_user.cid;
@@ -54,82 +58,122 @@ tomo.model = (function () {
       return 'c' + String( stateMap.cid_serial++ );
   };
 
-  clearPeopleDb = function (){
-      var user = stateMap.user;
-      stateMap.people_db = TAFFY();
-      stateMap.people_cid_map = {};
-      if ( user ) {
-          stateMap.people_db.insert( user );
-          stateMap.people_cid_map[ user.cid ] = user;
+  clearUsersDb = function (){
+      var current_user = stateMap.current_user;
+      stateMap.users_db = TAFFY();
+      stateMap.users_cid_map = {};
+      if ( current_user ) {
+          stateMap.users_db.insert( current_user );
+          stateMap.users_cid_map[ current_user.cid ] = current_user;
       }
   };
 
   completeLogin = function ( user_list ) {
       var user_map = user_list[0];
-      delete stateMap.people_cid_map[ user_map.cid ];
-      stateMap.user.cid = user_map._id;
-      stateMap.user.id = user_map._id;
-      stateMap.user.css_map = user_map.css_map;
-      stateMap.people_cid_map[ user_map._id ] = stateMap.user;
+      delete stateMap.users_cid_map[ user_map.cid ];
+      stateMap.current_user.cid = user_map._id;
+      stateMap.current_user.id = user_map._id;
+      stateMap.users_cid_map[ user_map._id ] = stateMap.current_user;
 
       // チャットに参加
       //chat.join();
-      $.gevent.publish( 'tomo-login', [ stateMap.user ]);
+      $.gevent.publish( 'tomo-login', [ stateMap.current_user ]);
   };
 
 
-  makePerson = function ( person_map ) {
-    var person,
-          cid			= person_map.cid,
-          id 			= person_map.id,
-          passwd    = person_map.passwd,
-          name		= person_map.name;
+  makeUser = function ( user_map ) {
+    var user,
+          cid			= user_map.cid,
+          id 			= user_map.id,
+          passwd    = user_map.passwd,
+          name		= user_map.name;
 
     if ( !passwd || !name ) {
         throw 'ユーザー名とパスワードが必要です';
     }
 
-    // personオブジェクトを作成
-    person			= Object.create( personProto );
-    person.cid	= cid;
-    person.name = name;
-    person.passwd = passwd;
+    // userオブジェクトを作成
+    user			= Object.create( userProto );
+    user.cid	= cid;
+    user.name = name;
+    user.passwd = passwd;
 
-    if ( id ) { person.id = id; }
+    if ( id ) { user.id = id; }
 
-    stateMap.people_cid_map[ cid ] = person;
-    stateMap.people_db.insert( person );
+    stateMap.users_cid_map[ cid ] = user;
+    stateMap.users_db.insert( user );
 
-    return person;
+    return user;
   };
 
-  removePerson = function ( person ){
-      if ( ! person ){ return false; }
+  removeUser = function ( user ){
+      if ( ! user ){ return false; }
       // 匿名ユーザは削除できない
-      if ( person.id === configMap.anon_id ){
+      if ( user.id === configMap.anon_id ){
           return false;
       }
 
-      stateMap.people_db({ cid : person.cid }).remove();
-      if ( person.cid ){
-          delete stateMap.people_cid_map[ person.cid ];
+      stateMap.users_db({ cid : user.cid }).remove();
+      if ( user.cid ){
+          delete stateMap.users_cid_map[ user.cid ];
       }
       return true;
   };
+  //
+  // ---------------------
+  // todo オブジェクトAPI
+  // ---------------------
 
-  //------------------- パブリックメソッド↓ -------------------
-  // パブリックメソッド /people/ ↓
-  people = (function (){
-    var get_by_cid, get_db, get_user, login, logout,
-        people_list;
+  itemProto = {
+    get_is_current_item : function () { // オブジェクトが現在のアイテムの場合にtrueを返す
+        return this.cid === stateMap.current_item.cid;
+    },
+  };
 
-    get_by_cid = function ( cid ){
-        return stateMap.people_cid_map[ cid ];
+  makeTodoCid = function (){
+        return 'todo' + String( stateMap.todoCid_serial++ );
     };
 
-    get_db = function () { return stateMap.people_db; };
+    makeItem = function ( item_map ) {
+        var item,
+            id 	 = item_map.id,
+            cid	= item_map.cid,
+            uid	= item_map.uid,
+            linum	= item_map.linum,
+            order	= item_map.order,
+            title    = item_map.title,
+            memo		= item_map.memo;
 
-    get_user = function () { return stateMap.user; };
+        // userオブジェクトを作成
+        item = Object.create( itemProto );
+        item.cid	= cid;
+        item.uid	= uid;
+        item.linum	= linum;
+        item.order	= order;
+        item.title = title;
+        item.memo = memo;
+
+        if ( id ) { item.id = id; }
+
+    //    stateMap.users_cid_map[ cid ] = user;
+        stateMap.todo_db.insert( item );
+
+        return item;
+  };
+  
+  //------------------- パブリックメソッド↓ -------------------
+  // パブリックメソッド /users/ ↓
+  users = (function (){
+    var get_by_cid, get_db, get_current_user, login, logout,
+        users_list;
+
+    get_by_cid = function ( cid ){
+        return stateMap.users_cid_map[ cid ];
+    };
+
+    get_db = function () { return stateMap.users_db; };
+
+    get_current_user = function () { return stateMap.current_user; };
 
     login = function ( name, passwd  ) {
       var sio = isFakeData ? tomo.fake.mockSio : tomo.data.getSio(),
@@ -137,12 +181,13 @@ tomo.model = (function () {
 
 
 
-      userFound = stateMap.people_db({name:name, passwd:passwd}).first();
+      userFound = stateMap.users_db({name:name, passwd:passwd}).first();
 
       if ( userFound ){
-        stateMap.user = userFound;
-        stateMap.user.passwd = "";
-        console.log(stateMap.user);
+        stateMap.current_user = userFound;
+        stateMap.current_user.passwd = "";
+
+        console.log("current user:" + stateMap.current_user.name);
             return true;
       } else {
           return false;
@@ -152,19 +197,19 @@ tomo.model = (function () {
     //   sio.on( 'userupdate', completeLogin );  
 
     //   sio.emit( 'adduser', {
-    //       cid 	 : stateMap.user.cid,
-    //       name	 : stateMap.user.name
+    //       cid 	 : stateMap.current_user.cid,
+    //       name	 : stateMap.current_user.name
     //   });
-      return true;
+      //return true;
     };
 
     logout = function () {
-      var user = stateMap.user;
+      var user = stateMap.current_user;
 
       //チャットルームから退出
       chat._leave();
-      stateMap.user = stateMap.anon_user;
-      clearPeopleDb();
+      stateMap.current_user = stateMap.anon_user;
+      clearUsersDb();
 
       $.gevent.publish( 'tomo-logout', [ user ]);
     };
@@ -172,25 +217,36 @@ tomo.model = (function () {
     return {
       get_by_cid	: get_by_cid,
       get_db			: get_db,
-      get_user		: get_user,
+      get_current_user		: get_current_user,
       login				: login,
       logout			: logout
     };
   }());
-  // パブリックメソッド /people/ ↑
+  // パブリックメソッド /users/ ↑
 
+  // パブリックメソッド /todo/ ↓
+  todo = (function (){
+    var get_db, get_item;
+
+    get_db = function () { return stateMap.todo_db; };
+    get_item = function () { return stateMap.current_item; };
+
+    return {
+      get_db			: get_db,
+      get_item		: get_item,
+    };
+  }());
+
+  // パブリックメソッド /todo/ ↑
 
   // パブリックメソッド /initModule/ ↓
-  // 目的     : モジュールを初期化する
-  // 引数     : なし
-  // 戻り値   : なし
-  // 例外発行 : なし
   //
   initModule = function () {
-    var i, people_list, person_map;
+    var i, users_list, user_map,
+        todo_list, item_map;
 
     // 匿名ユーザを初期化する
-    stateMap.anon_user = makePerson({
+    stateMap.anon_user = makeUser({
       cid : configMap.anon_id,
       id  : configMap.anon_id,
       passwd : 'secret',
@@ -199,28 +255,41 @@ tomo.model = (function () {
     stateMap.user = stateMap.anon_user; // 現在のユーザの初期値は匿名ユーザ
 
     if ( isFakeData ) {
-        people_list = tomo.fake.getPeopleList();
-        for ( i = 0; i < people_list.length; i++) {
-            person_map = people_list[i];
-            makePerson({
-              cid     : person_map._id,
-              id     : person_map._id,
-              name     : person_map.name,
-              passwd     : person_map.passwd
+        // ユーザーリストの取得
+        users_list = tomo.fake.getUsersList();
+        for ( i = 0; i < users_list.length; i++) {
+            user_map = users_list[i];
+            makeUser({
+              cid     : user_map._id,
+              id     : user_map._id,
+              name     : user_map.name,
+              passwd     : user_map.passwd
+            });
+        }
+
+        // todoリストの取得
+        todo_list = tomo.fake.getTodoList();
+        for ( i = 0; i < todo_list.length; i++) {
+            item_map = todo_list[i];
+            makeItem({
+              id     : item_map._id,
+              cid    : item_map._id,
+              uid    : item_map.uid,
+              linum  : item_map.linum,
+              order  : item_map.order,
+              title  : item_map.title,
+              memo   : item_map.memo
             });
         }
     }
-    
-
   };
   // パブリックメソッド /initModule/ ↑
 
   // パブリックメソッドを返す
   return {
     initModule  : initModule,
-//    chat				: chat,
-    people			: people,
-    hello   : "hello!"
+    todo		: todo,
+    users		: users
   };
   //------------------- パブリックメソッド↑ ---------------------
 }());

@@ -43,10 +43,6 @@ var
 
 //----------------- モジュールスコープ変数↑ ---------------
 
-//------------------- ユーティリティメソッド↓ ------------------
-// getEmSize() 削除
-//-------------------- ユーティリティメソッド↑ -------------------
-
 //--------------------- DOMメソッド↓ --------------------
 // DOM メソッド /setJqueryMap/↓
 setJqueryMap = function () {
@@ -81,44 +77,39 @@ configModule = function ( input_map ) {
   });
   return true;
 };
+// パブリックメソッド /configModule/ ↑
 
 // イベントハンドラ開始
+onSubmit = function() {
+  var username = jqueryMap.$name.prop('value'), 
+  password =jqueryMap.$passwd.prop('value');
 
-
+  if ( username === undefined ||
+    password === undefined ){
+    jqueryMap.$msg.html( "ユーザー名とパスワードを入力してください" );
+  } else {
+    if (tomo.model.users.login(username, password)) {
+      tomo.shell.initModule($('#tomo'), 'list');
+    } else {
+    jqueryMap.$msg.html( "ログインできませんでした<br>" +
+                        "ユーザー名とパスワードを正しく入力してください");
+    }     
+  }
+}
 
 // イベントハンドラ終了
 
-// パブリックメソッド /configModule/ ↑
 
 // パブリックメソッド /initModule/ ↓
-//
 initModule = function ( $append_target ) {
   stateMap.$append_target = $append_target;
   $append_target.find("#tomo-shell-main").append( configMap.main_html );
-  //$append_target.html( configMap.main_html );
   setJqueryMap();
 
   jqueryMap.$submit.on("click", function ( event ) {
-    
-    var username = jqueryMap.$name.prop('value'), 
-        password =jqueryMap.$passwd.prop('value');
-
-    if ( username === undefined ||
-         password === undefined ){
-        jqueryMap.$msg.html( "ユーザー名とパスワードを入力してください" );
-    } else {
-      if (tomo.model.people.login(username, password)) {
-        tomo.shell.initModule($('#tomo'), 'list');
-      } else {
-        jqueryMap.$msg.html( "ログインできませんでした<br>" +
-                             "ユーザー名とパスワードを正しく入力してください");
-      }     
-    }
-
+    onSubmit();
   });
   
-  // ユーザー入力イベントをバインドする
-  //jqueryMap.$submit.bind('utap', onSubmit );
 
 };
 // パブリックメソッド /initModule/ ↑
