@@ -29,6 +29,7 @@ tomo.model = (function () {
       current_user	: null,
 
       todoCid_serial: 0,
+      todo_cid_map : {},
       todo_db		 : TAFFY(), //todoオブジェクトのTaffyDBコレクションを格納
       current_item	: null,
     },
@@ -54,8 +55,8 @@ tomo.model = (function () {
       }
   };
 
-  makeCid = function (){
-      return 'c' + String( stateMap.cid_serial++ );
+  makeCid = function (num = 1){
+      return 'id_' + ('00' + num ).slice(-2);
   };
 
   clearUsersDb = function (){
@@ -130,8 +131,8 @@ tomo.model = (function () {
     },
   };
 
-  makeTodoCid = function (){
-        return 'todo' + String( stateMap.todoCid_serial++ );
+    makeTodoCid = function ( num = 1 ){
+        return 'todo_' + ('00' + num ).slice(-2);
     };
 
     makeItem = function ( item_map ) {
@@ -143,8 +144,9 @@ tomo.model = (function () {
             order	= item_map.order,
             title    = item_map.title,
             memo		= item_map.memo;
+            if (cid.length === 0) { cid = makeTodoCid(linum)};
 
-        // userオブジェクトを作成
+        // itemオブジェクトを作成
         item = Object.create( itemProto );
         item.cid	= cid;
         item.uid	= uid;
@@ -155,7 +157,7 @@ tomo.model = (function () {
 
         if ( id ) { item.id = id; }
 
-    //    stateMap.users_cid_map[ cid ] = user;
+        stateMap.todo_cid_map[ cid ] = item;
         stateMap.todo_db.insert( item );
 
         return item;
@@ -226,12 +228,16 @@ tomo.model = (function () {
 
   // パブリックメソッド /todo/ ↓
   todo = (function (){
-    var get_db, get_item;
+    var get_db, get_item, get_by_cid;
 
+    get_by_cid = function ( cid ){
+        return stateMap.todo_cid_map[ cid ];
+    };
     get_db = function () { return stateMap.todo_db; };
     get_item = function () { return stateMap.current_item; };
 
     return {
+      get_by_cid : get_by_cid,
       get_db			: get_db,
       get_item		: get_item,
     };
@@ -289,7 +295,10 @@ tomo.model = (function () {
   return {
     initModule  : initModule,
     todo		: todo,
-    users		: users
+    users		: users,
+    makeItem    : makeItem
+/*     makeCid      : makeCid,
+    makeTodoCid : makeTodoCid */
   };
   //------------------- パブリックメソッド↑ ---------------------
 }());

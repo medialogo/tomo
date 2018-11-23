@@ -32,13 +32,18 @@ var
 
   },  
   
-  stateMap = { $append_target : null},
+  stateMap = { $append_target : null,
+    current_user : null,
+    uid : null,
+    todo_db : null,
+    get_item_by_cid : null,
+  },
   jqueryMap = {},
 
   last_selected_item = -1,
 
   setJqueryMap,
-  addNewItem,
+  addNewItem, doReorder,
   onClickNew, onClickItem, onClickDelete,
   configModule, initModule;
 
@@ -97,30 +102,29 @@ addNewItem = function( idx, item ) {
 
 
       var $item;
-      
-      if ( item === undefined ) {
-        $item =$('<li class="tomo-list-item"><span class="ui-icon ui-icon-triangle-2-n-s"></span> todo '
-        + idx 
+
+        $item =$('<li class="tomo-list-item" order="' + item.order +' "cid="' + item.cid 
+        + '"><span class="ui-icon ui-icon-triangle-2-n-s"></span> todo '
+        + item.linum  + ' ' + item.title + " (" + item.order + ":" + item.cid + ")"
         + '</span></li>');
-      } else {
-        $item =$('<li class="tomo-list-item"><span class="ui-icon ui-icon-triangle-2-n-s"></span> todo '
-        + item.linum  + ' ' + item.title 
-        + '</span></li>');
-      }
+      // }
 
     //  $item.bind( 'utap', onClickItem );
       $item.on("mousedown", function( event ) {
+
         var $list = jqueryMap.$list_items;
 
         if (event.clientX < 50 ) {
-          $list.selectable('disable');
+         $list.selectable('disable');
           $list.children().removeClass('ui-selected');
           $list.sortable('enable');
           $list.sortable({
             tolerance : "pointer",
             stop: function(event, ui) {
-              ui.item.addClass('ui-selected');
-            }
+              var $dragged = ui.item;
+              $dragged.addClass('ui-selected');
+              doReorder( $(this));
+            },
           });
 
         } else {
@@ -131,15 +135,40 @@ addNewItem = function( idx, item ) {
       });
 
       jqueryMap.$list_items.append($item);
-      var item_height = $item.height();
+      // var item_height = $item.height();
 
 }
 
-onClickNew = function( event ) {
-  var $item_list = jqueryMap.$list_items,
-  item_count = $item_list.children().length;
+doReorder = function ( $list ) {
+  var i, order = 0, $item, cid,
+    cid_list = $list.sortable("toArray", { attribute: 'cid' });
+  for ( i=0; i < cid_list.length; i++ ) {
+    cid = cid_list[i];
+    $item = $list.find('[cid=' + cid + ']').attr("order", order++);
+    var text = $item.html();
+    $item.html(text.replace(/\d+:todo/, order + ":todo"));
 
-  addNewItem(++item_count);
+    stateMap.get_item_by_cid(cid).order = order;
+
+  } 
+}
+
+
+onClickNew = function( event ) {
+  var $item_list = jqueryMap.$list_items;
+  var item_count = jqueryMap.$list_items.children().length;
+  ++item_count;
+  
+  var newItem = tomo.model.makeItem({
+    id     : "",
+    cid    : "",
+    uid    : stateMap.uid,
+    linum  : item_count,
+    order  : item_count,
+    title  : "(new)",
+    memo   : ""
+  });
+  addNewItem( item_count, newItem);
 
 }
 
@@ -151,7 +180,7 @@ onClickDelete = function( event ) {
 }
 
 onClickItem = function ( event ) {
-  console.log ( event.target);
+  // console.log ( event.target);
 }
 
 // イベントハンドラ終了
@@ -161,21 +190,21 @@ onClickItem = function ( event ) {
 // パブリックメソッド /initModule/ ↓
 //
 initModule = function ( $append_target ) {
-  var get_db, todo_list = {}, item, idx;
+  // var get_db, todo_list = {}, item, idx;
   stateMap.$append_target = $append_target;
   $append_target.find("#tomo-list-frame").append( configMap.main_html );
   setJqueryMap();
 
+  stateMap.current_user = tomo.model.users.get_current_user(); 
+  stateMap.todo_db = tomo.model.todo.get_db();
+  stateMap.uid = tomo.model.users.get_current_user().id;
+  stateMap.get_item_by_cid = tomo.model.todo.get_by_cid;
 
   jqueryMap.$list_items.sortable().selectable();
 
-  var current_user = tomo.model.users.get_current_user(); 
-  
-  var todo_db = tomo.model.todo.get_db();
-  var list = todo_db().get();
 
-  todo_db().each( function (item, idx) {
-    todo_list[idx] = {
+  stateMap.todo_db({uid: stateMap.uid}).order("order").each( function (item, idx) {
+/*     todo_list[idx] = {
       id     : item._id,
       cid    : item.cid,
       uid    : item.uid,
@@ -183,7 +212,7 @@ initModule = function ( $append_target ) {
       order  : item.order,
       title  : item.title,
       memo   : item.memo
-    }
+    } */
     addNewItem(idx, item);
   });
 
